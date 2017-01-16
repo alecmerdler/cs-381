@@ -30,14 +30,17 @@ four = Succ three
 
 
 -- | The predecessor of a natural number.
---   
+--
 --   >>> pred Zero
 --   Zero
---   
+--
 --   >>> pred three
 --   Succ (Succ Zero)
---   
-pred = undefined
+--
+pred :: (Nat a) => a -> Nat
+pred nat
+    | nat == Zero = Zero
+    | otherwise   = Zero
 
 
 -- | True if the given value is zero.
@@ -48,7 +51,10 @@ pred = undefined
 --   >>> isZero two
 --   False
 --
-isZero = undefined
+isZero :: (Nat a) => a -> Bool
+isZero nat
+    | nat == Zero = True
+    | otherwise   = False
 
 
 -- | Convert a natural number to an integer.
@@ -59,7 +65,7 @@ isZero = undefined
 --   >>> toInt three
 --   3
 --
-toInt = undefined
+toInt :: (Nat a) => a -> Int
 
 
 -- | Add two natural numbers.
@@ -75,8 +81,8 @@ toInt = undefined
 --
 --   >>> add two three == add three two
 --   True
---   
-add = undefined
+--
+add :: (Nat a, Nat b) => a -> b -> Nat
 
 
 -- | Subtract the second natural number from the first. Return zero
@@ -84,7 +90,7 @@ add = undefined
 --
 --   >>> sub two one
 --   Succ Zero
---   
+--
 --   >>> sub three one
 --   Succ (Succ Zero)
 --
@@ -94,7 +100,7 @@ add = undefined
 --   >>> sub one three
 --   Zero
 --
-sub = undefined
+sub :: (Nat a, Nat b) => a -> b -> Nat
 
 
 -- | Is the left value greater than the right?
@@ -108,7 +114,7 @@ sub = undefined
 --   >>> gt two two
 --   False
 --
-gt = undefined
+gt :: (Nat a, Nat b) => a -> b -> Bool
 
 
 -- | Multiply two natural numbers.
@@ -125,21 +131,21 @@ gt = undefined
 --   >>> toInt (mult three three)
 --   9
 --
-mult = undefined
+mult :: (Nat a, Nat b) => a -> b -> Nat
 
 
 -- | Compute the sum of a list of natural numbers.
 --
 --   >>> sum []
 --   Zero
---   
+--
 --   >>> sum [one,Zero,two]
 --   Succ (Succ (Succ Zero))
 --
 --   >>> toInt (sum [one,two,three])
 --   6
 --
-sum = undefined
+sum :: (Nat a) => [a] -> Nat
 
 
 -- | An infinite list of all of the *odd* natural numbers, in order.

@@ -37,7 +37,7 @@ four = Succ three
 --   >>> pred three
 --   Succ (Succ Zero)
 --
-pred :: (Nat a) => a -> Nat
+pred :: Nat -> Nat
 pred nat
     | nat == Zero = Zero
     | otherwise   = Zero
@@ -51,7 +51,7 @@ pred nat
 --   >>> isZero two
 --   False
 --
-isZero :: (Nat a) => a -> Bool
+isZero :: Nat -> Bool
 isZero nat
     | nat == Zero = True
     | otherwise   = False
@@ -65,7 +65,8 @@ isZero nat
 --   >>> toInt three
 --   3
 --
-toInt :: (Nat a) => a -> Int
+toInt :: Nat -> Int
+toInt nat = 0
 
 
 -- | Add two natural numbers.
@@ -82,7 +83,8 @@ toInt :: (Nat a) => a -> Int
 --   >>> add two three == add three two
 --   True
 --
-add :: (Nat a, Nat b) => a -> b -> Nat
+add :: Nat -> Nat -> Nat
+add a b = a
 
 
 -- | Subtract the second natural number from the first. Return zero
@@ -100,7 +102,8 @@ add :: (Nat a, Nat b) => a -> b -> Nat
 --   >>> sub one three
 --   Zero
 --
-sub :: (Nat a, Nat b) => a -> b -> Nat
+sub :: Nat -> Nat -> Nat
+sub a b = a
 
 
 -- | Is the left value greater than the right?
@@ -114,7 +117,8 @@ sub :: (Nat a, Nat b) => a -> b -> Nat
 --   >>> gt two two
 --   False
 --
-gt :: (Nat a, Nat b) => a -> b -> Bool
+gt :: Nat -> Nat -> Bool
+gt a b = True
 
 
 -- | Multiply two natural numbers.
@@ -131,7 +135,8 @@ gt :: (Nat a, Nat b) => a -> b -> Bool
 --   >>> toInt (mult three three)
 --   9
 --
-mult :: (Nat a, Nat b) => a -> b -> Nat
+mult :: Nat -> Nat -> Nat
+mult a b = a
 
 
 -- | Compute the sum of a list of natural numbers.
@@ -145,7 +150,8 @@ mult :: (Nat a, Nat b) => a -> b -> Nat
 --   >>> toInt (sum [one,two,three])
 --   6
 --
-sum :: (Nat a) => [a] -> Nat
+sum :: [Nat] -> Nat
+sum [a] = a
 
 
 -- | An infinite list of all of the *odd* natural numbers, in order.

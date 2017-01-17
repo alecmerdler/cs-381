@@ -118,7 +118,10 @@ sub a b = a
 --   False
 --
 gt :: Nat -> Nat -> Bool
-gt a b = True
+gt Zero Zero = False
+gt Zero (Succ b) = False
+gt (Succ a) Zero = True
+gt (Succ a) (Succ b) = gt a b
 
 
 -- | Multiply two natural numbers.

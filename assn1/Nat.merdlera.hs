@@ -84,7 +84,9 @@ toInt (Succ nat) = (toInt nat) + 1
 --   True
 --
 add :: Nat -> Nat -> Nat
-add (Succ a) (Succ b) = a
+add Zero b = b
+add a Zero = a
+add (Succ a) (Succ b) = add a b
 
 
 -- | Subtract the second natural number from the first. Return zero
@@ -103,7 +105,10 @@ add (Succ a) (Succ b) = a
 --   Zero
 --
 sub :: Nat -> Nat -> Nat
-sub a b = a
+sub Zero b = Zero
+sub a Zero = a
+sub (Succ a) (Succ b) = sub a b
+
 
 
 -- | Is the left value greater than the right?
@@ -154,7 +159,8 @@ mult a b = a
 --   6
 --
 sum :: [Nat] -> Nat
-sum [a] = a
+sum [] = Zero
+sum [x] = x
 
 
 -- | An infinite list of all of the *odd* natural numbers, in order.

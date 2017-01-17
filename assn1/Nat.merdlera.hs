@@ -38,9 +38,8 @@ four = Succ three
 --   Succ (Succ Zero)
 --
 pred :: Nat -> Nat
-pred nat
-    | nat == Zero = Zero
-    | otherwise   = Zero
+pred Zero = Zero
+pred (Succ nat) = nat
 
 
 -- | True if the given value is zero.
@@ -66,7 +65,8 @@ isZero nat
 --   3
 --
 toInt :: Nat -> Int
-toInt nat = 0
+toInt Zero = 0
+toInt (Succ nat) = (toInt nat) + 1
 
 
 -- | Add two natural numbers.
@@ -84,7 +84,7 @@ toInt nat = 0
 --   True
 --
 add :: Nat -> Nat -> Nat
-add a b = a
+add (Succ a) (Succ b) = a
 
 
 -- | Subtract the second natural number from the first. Return zero

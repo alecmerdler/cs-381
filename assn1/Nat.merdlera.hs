@@ -84,9 +84,8 @@ toInt (Succ nat) = (toInt nat) + 1
 --   True
 --
 add :: Nat -> Nat -> Nat
-add Zero b = b
-add a Zero = a
-add (Succ a) (Succ b) = add a b
+add Zero a = a
+add (Succ a) b = add a (Succ b)
 
 
 -- | Subtract the second natural number from the first. Return zero
@@ -144,7 +143,9 @@ gt (Succ a) (Succ b) = gt a b
 --   9
 --
 mult :: Nat -> Nat -> Nat
-mult a b = a
+mult Zero a = Zero
+mult a Zero = Zero
+mult a (Succ b) = add a (mult a b)
 
 
 -- | Compute the sum of a list of natural numbers.

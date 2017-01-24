@@ -161,7 +161,7 @@ mult a (Succ b) = add a (mult a b)
 --
 sum :: [Nat] -> Nat
 sum [] = Zero
-sum [x] = x
+sum (x:xs) = add x (sum xs)
 
 
 -- | An infinite list of all of the *odd* natural numbers, in order.
@@ -172,4 +172,5 @@ sum [x] = x
 --   >>> toInt (sum (take 100 odds))
 --   10000
 --
-odds = undefined
+odds :: [Nat]
+odds = one : map (add two) odds

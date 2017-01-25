@@ -38,7 +38,7 @@ four = Succ three
 --   Succ (Succ Zero)
 --
 pred :: Nat -> Nat
-pred Zero = Zero
+pred Zero       = Zero
 pred (Succ nat) = nat
 
 
@@ -65,7 +65,7 @@ isZero nat
 --   3
 --
 toInt :: Nat -> Int
-toInt Zero = 0
+toInt Zero       = 0
 toInt (Succ nat) = (toInt nat) + 1
 
 
@@ -84,7 +84,7 @@ toInt (Succ nat) = (toInt nat) + 1
 --   True
 --
 add :: Nat -> Nat -> Nat
-add Zero a = a
+add Zero a     = a
 add (Succ a) b = add a (Succ b)
 
 
@@ -104,8 +104,8 @@ add (Succ a) b = add a (Succ b)
 --   Zero
 --
 sub :: Nat -> Nat -> Nat
-sub Zero b = Zero
-sub a Zero = a
+sub Zero b            = Zero
+sub a Zero            = a
 sub (Succ a) (Succ b) = sub a b
 
 
@@ -122,9 +122,9 @@ sub (Succ a) (Succ b) = sub a b
 --   False
 --
 gt :: Nat -> Nat -> Bool
-gt Zero Zero = False
-gt Zero (Succ b) = False
-gt (Succ a) Zero = True
+gt Zero Zero         = False
+gt Zero (Succ b)     = False
+gt (Succ a) Zero     = True
 gt (Succ a) (Succ b) = gt a b
 
 
@@ -143,8 +143,8 @@ gt (Succ a) (Succ b) = gt a b
 --   9
 --
 mult :: Nat -> Nat -> Nat
-mult Zero a = Zero
-mult a Zero = Zero
+mult Zero a     = Zero
+mult a Zero     = Zero
 mult a (Succ b) = add a (mult a b)
 
 
@@ -160,7 +160,7 @@ mult a (Succ b) = add a (mult a b)
 --   6
 --
 sum :: [Nat] -> Nat
-sum [] = Zero
+sum []     = Zero
 sum (x:xs) = add x (sum xs)
 
 

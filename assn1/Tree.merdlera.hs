@@ -79,7 +79,7 @@ rightmost (Node _ _ r) = rightmost r
 --   9
 --
 maxInt :: Tree -> Int
-maxInt (Leaf i) = i
+maxInt (Leaf i)     = i
 maxInt (Node i l r) = max i (max (maxInt l) (maxInt r))
 
 
@@ -101,7 +101,7 @@ maxInt (Node i l r) = max i (max (maxInt l) (maxInt r))
 --   1
 --
 minInt :: Tree -> Int
-minInt (Leaf i) = i
+minInt (Leaf i)     = i
 minInt (Node i l r) = min i (min (minInt l) (minInt r))
 
 
@@ -120,7 +120,7 @@ minInt (Node i l r) = min i (min (minInt l) (minInt r))
 --   100
 --
 sumInts :: Tree -> Int
-sumInts (Leaf i) = i
+sumInts (Leaf i)     = i
 sumInts (Node i l r) = i + (sumInts l) + (sumInts r)
 
 
@@ -139,7 +139,7 @@ sumInts (Node i l r) = i + (sumInts l) + (sumInts r)
 --   [6,2,1,4,3,5,8,7,9]
 --
 preorder :: Tree -> [Int]
-preorder (Leaf i) = [i]
+preorder (Leaf i)     = [i]
 preorder (Node i l r) = i : (preorder l) ++ (preorder r)
 
 
@@ -158,7 +158,7 @@ preorder (Node i l r) = i : (preorder l) ++ (preorder r)
 --   [1,2,3,4,5,6,7,8,9]
 --
 inorder :: Tree -> [Int]
-inorder (Leaf i) = [i]
+inorder (Leaf i)     = [i]
 inorder (Node i l r) = (inorder l) ++ [i] ++ (inorder r)
 
 
@@ -177,7 +177,15 @@ inorder (Node i l r) = (inorder l) ++ [i] ++ (inorder r)
 --   True
 --
 isBST :: Tree -> Bool
-isBST (Leaf i) = True
+isBST (Leaf i)  = True
+isBST (Node i (Leaf l) (Leaf r))
+    | l > i     = False
+    | r < i     = False
+    | otherwise = True
+isBST (Node i (Node l _ _) (Node r _ _))
+    | l > i     = False
+    | r < i     = False
+    | otherwise = True
 
 
 -- | Check whether a number is contained in a binary search tree.
@@ -197,5 +205,8 @@ isBST (Leaf i) = True
 --
 inBST :: Int -> Tree -> Bool
 inBST a (Leaf i)
-    | a == i = True
+    | a == i    = True
     | otherwise = False
+inBST a (Node i l r)
+    | a == i    = True
+    | otherwise = (inBST a l) || (inBST a r)

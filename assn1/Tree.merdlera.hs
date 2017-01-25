@@ -159,6 +159,7 @@ preorder (Node i l r) = i : (preorder l) ++ (preorder r)
 --
 inorder :: Tree -> [Int]
 inorder (Leaf i) = [i]
+inorder (Node i l r) = (inorder l) ++ [i] ++ (inorder r)
 
 
 -- | Check whether a binary tree is a binary search tree.

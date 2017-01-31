@@ -26,7 +26,7 @@ type Prog = [Cmd]
 data Cmd = Pen Mode
          | Move (Expr, Expr)
          | Define String [String] Prog
-         | Call String
+         | Call Cmd [Expr]
          deriving Show
 
 
@@ -41,12 +41,12 @@ data Cmd = Pen Mode
 --               pen down; move (x2, y2);
 --           }
 --
-
--- >>> line [1, 2, 3, 4]
--- 3
 line :: Cmd
 line = Define "line" ["x1", "y1", "x2", "y2"]
-       [Pen Up, Move (Ref "x1", Ref "y1"), Pen Down, Move (Ref "x2", Ref "y2")]
+       [ Pen Up
+       , Move (Ref "x1", Ref "y1")
+       , Pen Down, Move (Ref "x2", Ref "y2")
+       ]
 
 
 --
@@ -61,7 +61,13 @@ line = Define "line" ["x1", "y1", "x2", "y2"]
 --               pen up; line (x + w, y, x, y + h);
 --           }
 --
-
+nix :: Cmd
+nix = Define "nix" ["x", "y", "w", "h"]
+      [ Pen Down
+      , Call line [(Ref "x"), (Ref "y"), Add (Ref "x") (Ref "w"), Add (Ref "y") (Ref "h")]
+      , Pen Up
+      , Call line [Add (Ref "x") (Ref "w"), (Ref "y"), (Ref "x"), Add (Ref "y") (Ref "h")]
+      ]
 
 
 --

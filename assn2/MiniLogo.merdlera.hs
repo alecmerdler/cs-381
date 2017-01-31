@@ -8,23 +8,23 @@ module MiniLogo where
 -- | Pen status
 data Mode = Up
           | Down
-          deriving (Show, Eq)
+          deriving (Show,Eq)
 
 
 -- | Different expressions
-data Expr = String
+data Expr = Ref String
           | Num
-          | Expr + Expr
+          | Add Expr Expr
           deriving (Eq,Show)
 
 
 -- | Macro body (list of commands)
-data Prog = [Cmd]
+type Prog = [Cmd]
 
 
 -- | Standard commands in MiniLog
 data Cmd = Pen Mode
-         | Move Expr Expr
+         | Move (Expr, Expr)
          | Define String [String] Prog
          | Call String
          deriving Show
@@ -42,9 +42,11 @@ data Cmd = Pen Mode
 --           }
 --
 
+-- >>> line [1, 2, 3, 4]
+-- 3
 line :: Cmd
 line = Define "line" ["x1", "y1", "x2", "y2"]
-       [Pen Up, Move ("x1")]
+       [Pen Up, Move (Ref "x1", Ref "y1"), Pen Down, Move (Ref "x2", Ref "y2")]
 
 
 --

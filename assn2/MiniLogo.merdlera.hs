@@ -1,0 +1,2 @@
+module MiniLogo where
+

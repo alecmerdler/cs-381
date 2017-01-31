@@ -15,13 +15,17 @@ data Mode = Up
 data Expr = String
           | Num
           | Expr + Expr
-          deriving Show
+          deriving (Eq,Show)
+
+
+-- | Macro body (list of commands)
+data Prog = [Cmd]
 
 
 -- | Standard commands in MiniLog
 data Cmd = Pen Mode
-         | Move Int Int
-         | Define String
+         | Move Expr Expr
+         | Define String [String] Prog
          | Call String
          deriving Show
 
@@ -30,14 +34,30 @@ data Cmd = Pen Mode
 -- * Part 2: Define a MiniLogo macro line (x1,y1,x2,y2) that (starting from anywhere on the canvas)
 --           draws a line segment from (x1,y1) to (x2,y2).
 --
+--           MiniLog concrete syntax:
+--
+--           define line (x1, y1, x2, y2) {
+--               pen up; move (x1, y1);
+--               pen down; move (x2, y2);
+--           }
+--
 
-
+line :: Cmd
+line = Define "line" ["x1", "y1", "x2", "y2"]
+       [Pen Up, Move ("x1")]
 
 
 --
 -- * Part 3: Use the line macro defined above to define a new MiniLogo macro nix (x,y,w,h) that
 --           draws a big “X” of width w and height h, starting from position (x,y).
 --           Your definition should not contain any move commands.
+--
+--           MiniLog concrete syntax:
+--
+--           define nix (x, y, w, h) {
+--               pen down; line (x, y, x + w, y + h);
+--               pen up; line (x + w, y, x, y + h);
+--           }
 --
 
 

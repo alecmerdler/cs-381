@@ -3,7 +3,7 @@ module MiniLogo where
 import Prelude hiding (Num)
 
 --
--- * Part 1: Define the abstract syntax of MiniLogo as a set of Haskell data types.
+-- | Part 1: Define the abstract syntax of MiniLogo as a set of Haskell data types.
 --
 
 -- | Primitive MiniLog types
@@ -38,7 +38,7 @@ data Cmd = Pen Mode
 
 
 --
--- * Part 2: Define a MiniLogo macro line (x1,y1,x2,y2) that (starting from anywhere on the canvas)
+-- | Part 2: Define a MiniLogo macro line (x1,y1,x2,y2) that (starting from anywhere on the canvas)
 --           draws a line segment from (x1,y1) to (x2,y2).
 --
 --           MiniLog concrete syntax:
@@ -57,7 +57,7 @@ line = Define "line" ["x1", "y1", "x2", "y2"]
 
 
 --
--- * Part 3: Use the line macro defined above to define a new MiniLogo macro nix (x,y,w,h) that
+-- | Part 3: Use the line macro defined above to define a new MiniLogo macro nix (x,y,w,h) that
 --           draws a big “X” of width w and height h, starting from position (x,y).
 --           Your definition should not contain any move commands.
 --
@@ -87,10 +87,9 @@ steps num = steps (pred num) ++ [Move ((Lit (pred num)), (Lit num))] ++ [Move ((
 
 
 --
--- * Part 5: Define a Haskell function macros :: Prog -> [Macro] that returns a list of the names
+-- | Part 5: Define a Haskell function macros :: Prog -> [Macro] that returns a list of the names
 --           of all of the macros that are defined anywhere in a given MiniLogo program.
 --
--- | Tests
 -- >>> macros []
 -- []
 --
@@ -124,15 +123,14 @@ macroname (Define m _ _) = m
 
 
 --
--- * Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
---
--- | Tests
+-- | Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
 --
 -- >>> pretty []
 -- ""
 --
 -- >>> pretty [Pen Up]
 -- "pen up;"
+--
 pretty :: Prog -> String
 pretty [] = ""
 pretty (x:xs) = undefined

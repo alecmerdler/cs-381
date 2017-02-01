@@ -138,9 +138,11 @@ macroname (Define m _ _) = m
 -- >>> pretty []
 -- ""
 --
---
 -- >>> pretty [Pen Up]
 -- "pen up;\n"
+--
+-- >>> pretty [(Define "test" ["x", "y"] [Pen Up]), (Pen Down), (Call "line" [(Ref "x")])]
+-- "define test(x, y) {\npen up;\n}\npen down;\ncall line (x);\n"
 --
 pretty :: Prog -> String
 pretty []     = ""

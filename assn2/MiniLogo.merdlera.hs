@@ -100,6 +100,9 @@ steps num = steps (pred num) ++ [Move ((Lit (pred num)), (Lit num))] ++ [Move ((
 -- >>> macros [Pen Up, Define "test" [] []]
 -- ["test"]
 --
+-- >>> macros [Pen Up, Define "test" [] [], Pen Down, Define "test2" [] []]
+-- ["test","test2"]
+--
 macros :: Prog -> [Macro]
 macros []          = []
 macros (x:xs)
@@ -123,3 +126,24 @@ macroname (Define m _ _) = m
 --
 -- * Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
 --
+-- | Tests
+--
+-- >>> pretty []
+-- ""
+--
+-- >>> pretty [Pen Up]
+-- "pen up;"
+pretty :: Prog -> String
+pretty [] = ""
+pretty (x:xs) = undefined
+
+
+-- Helper functions
+
+-- | Returns the string representation of a given abstract MiniLog expression.
+--
+-- >>> prettifyCmd (Pen Up)
+-- "pen up;\n"
+--
+prettifyCmd :: Cmd -> String
+prettifyCmd (Pen Up) = "pen up;\n"

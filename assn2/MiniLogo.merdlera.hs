@@ -1,6 +1,7 @@
 module MiniLogo where
 
 import Prelude hiding (Num)
+import Data.List
 
 --
 -- | Part 1: Define the abstract syntax of MiniLogo as a set of Haskell data types.
@@ -36,7 +37,7 @@ type Prog = [Cmd]
 data Cmd = Pen Mode
          | Move (Expr, Expr)
          | Define Macro [Var] Prog
-         | Call Cmd [Expr]
+         | Call Macro [Expr]
          deriving Show
 
 
@@ -74,9 +75,9 @@ line = Define "line" ["x1", "y1", "x2", "y2"]
 nix :: Cmd
 nix = Define "nix" ["x", "y", "w", "h"]
       [ Pen Down
-      , Call line [(Ref "x"), (Ref "y"), Add (Ref "x") (Ref "w"), Add (Ref "y") (Ref "h")]
+      , Call "line" [(Ref "x"), (Ref "y"), Add (Ref "x") (Ref "w"), Add (Ref "y") (Ref "h")]
       , Pen Up
-      , Call line [Add (Ref "x") (Ref "w"), (Ref "y"), (Ref "x"), Add (Ref "y") (Ref "h")]
+      , Call "line" [Add (Ref "x") (Ref "w"), (Ref "y"), (Ref "x"), Add (Ref "y") (Ref "h")]
       ]
 
 
@@ -153,16 +154,36 @@ pretty (x:xs) = prettifyCmd x ++ pretty xs
 -- >>> prettifyCmd (Pen Up)
 -- "pen up;\n"
 --
+-- >>> prettifyCmd (Pen Down)
+-- "pen down;\n"
+--
+-- >>> prettifyCmd (Move ((Ref "x"), (Lit 7)))
+-- "move (x, 7);\n"
+--
+-- >>> prettifyCmd (Call "line" [(Lit 1), (Ref "x"), (Add (Ref "x") (Lit 4))])
+-- "call line (1, x, x + 4);\n"
+--
+-- >>> prettifyCmd (Define "test" ["x", "y"] [Pen Up, Pen Down])
+-- "define test(x, y) {\npen up;\npen down;\n}\n"
+--
 prettifyCmd :: Cmd -> String
 prettifyCmd (Pen Up)      = "pen up;\n"
 prettifyCmd (Pen Down)    = "pen down;\n"
-prettifyCmd (Move (a, b)) = "move (" ++ prettifyExpr a ++ "," ++ prettifyExpr b ++ ");\n"
+prettifyCmd (Move (a, b)) = "move (" ++ prettifyExpr a ++ ", " ++ prettifyExpr b ++ ");\n"
+prettifyCmd (Call a b)    = "call " ++ a ++ " (" ++ concat (intersperse ", " (map prettifyExpr b)) ++ ");\n"
+prettifyCmd (Define a b c) = "define " ++ a ++ "(" ++ prettifyVars b ++ ") {\n" ++ pretty c ++ "}\n"
 
 
 -- | Returns the string representation of a given abstract MiniLog expression.
 --
 -- >>> prettifyExpr (Ref "x")
 -- "x"
+--
+-- >>> prettifyExpr (Lit 9)
+-- "9"
+--
+-- >>> prettifyExpr (Add (Lit 9) (Ref "x"))
+-- "9 + x"
 --
 prettifyExpr :: Expr -> String
 prettifyExpr (Ref x)   = x
@@ -175,6 +196,9 @@ prettifyExpr (Add x y) = (prettifyExpr x) ++ " + " ++ (prettifyExpr y)
 -- >>> prettifyVars []
 -- ""
 --
+-- >>> prettifyVars ["x"]
+-- "x"
+--
 -- >>> prettifyVars ["x", "y"]
 -- "x, y"
 --
@@ -182,3 +206,13 @@ prettifyVars :: [Var] -> String
 prettifyVars []     = ""
 prettifyVars [x]    = x
 prettifyVars (x:xs) = x ++ ", " ++ prettifyVars xs
+
+
+-- | Bonus - Part 7: Define a Haskell function optE :: Expr -> Expr that partially evaluates expressions by
+--                   replacing any additions of literals with the result.
+--
+
+
+-- | Bonus - Part 8: Define a Haskell function optP :: Prog -> Prog that optimizes all of the expressions
+--                   contained in a given program using optE.
+--

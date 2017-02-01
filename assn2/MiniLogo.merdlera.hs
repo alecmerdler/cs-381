@@ -6,8 +6,11 @@ import Prelude hiding (Num)
 -- | Part 1: Define the abstract syntax of MiniLogo as a set of Haskell data types.
 --
 
--- | Primitive MiniLog types
+-- | Primitive MiniLog types, using type synonyms
+type Num = Int
+type Var = String
 type Macro = String
+
 
 -- | Pen status
 data Mode = Up
@@ -15,12 +18,12 @@ data Mode = Up
           deriving (Show,Eq)
 
 
--- | Different expressions.
---   Ref String    - A reference to a string variable name
+-- | MiniLog expressions
+--   Ref Var       - A reference to a string variable name
 --   Lit Num       - A literal integer
 --   Add Expr Expr - Adding two expressions
-data Expr = Ref String
-          | Lit Int
+data Expr = Ref Var
+          | Lit Num
           | Add Expr Expr
           deriving (Eq,Show)
 
@@ -32,7 +35,7 @@ type Prog = [Cmd]
 -- | Standard commands in MiniLog
 data Cmd = Pen Mode
          | Move (Expr, Expr)
-         | Define String [String] Prog
+         | Define Macro [Var] Prog
          | Call Cmd [Expr]
          deriving Show
 
@@ -78,8 +81,14 @@ nix = Define "nix" ["x", "y", "w", "h"]
 
 
 --
--- * Part 4: Define a Haskell function steps :: Int -> Prog that constructs a MiniLogo
+-- | Part 4: Define a Haskell function steps :: Int -> Prog that constructs a MiniLogo
 --           program that draws a staircase of n steps starting from (0,0).
+--
+-- >>> steps 0
+-- [Pen Up,Move (Lit 0,Lit 0),Pen Down]
+--
+-- >>> steps 1
+-- [Pen Up,Move (Lit 0,Lit 0),Pen Down,Move (Lit 0,Lit 1),Move (Lit 1,Lit 1)]
 --
 steps :: Int -> Prog
 steps 0   = [Pen Up, Move (Lit 0, Lit 0), Pen Down]
@@ -123,7 +132,7 @@ macroname (Define m _ _) = m
 
 
 --
--- | Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
+--  Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
 --
 -- >>> pretty []
 -- ""

@@ -132,25 +132,53 @@ macroname (Define m _ _) = m
 
 
 --
---  Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
+-- | Part 6: Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
 --
 -- >>> pretty []
 -- ""
 --
+--
 -- >>> pretty [Pen Up]
--- "pen up;"
+-- "pen up;\n"
 --
 pretty :: Prog -> String
-pretty [] = ""
-pretty (x:xs) = undefined
+pretty []     = ""
+pretty (x:xs) = prettifyCmd x ++ pretty xs
 
 
 -- Helper functions
 
--- | Returns the string representation of a given abstract MiniLog expression.
+-- | Returns the string representation of a given abstract MiniLog command.
 --
 -- >>> prettifyCmd (Pen Up)
 -- "pen up;\n"
 --
 prettifyCmd :: Cmd -> String
-prettifyCmd (Pen Up) = "pen up;\n"
+prettifyCmd (Pen Up)      = "pen up;\n"
+prettifyCmd (Pen Down)    = "pen down;\n"
+prettifyCmd (Move (a, b)) = "move (" ++ prettifyExpr a ++ "," ++ prettifyExpr b ++ ");\n"
+
+
+-- | Returns the string representation of a given abstract MiniLog expression.
+--
+-- >>> prettifyExpr (Ref "x")
+-- "x"
+--
+prettifyExpr :: Expr -> String
+prettifyExpr (Ref x)   = x
+prettifyExpr (Lit x)   = show x
+prettifyExpr (Add x y) = (prettifyExpr x) ++ " + " ++ (prettifyExpr y)
+
+
+-- | Returns the string representation of a given list of abstract MiniLog variables.
+--
+-- >>> prettifyVars []
+-- ""
+--
+-- >>> prettifyVars ["x", "y"]
+-- "x, y"
+--
+prettifyVars :: [Var] -> String
+prettifyVars []     = ""
+prettifyVars [x]    = x
+prettifyVars (x:xs) = x ++ ", " ++ prettifyVars xs

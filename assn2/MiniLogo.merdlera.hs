@@ -6,6 +6,9 @@ import Prelude hiding (Num)
 -- * Part 1: Define the abstract syntax of MiniLogo as a set of Haskell data types.
 --
 
+-- | Primitive MiniLog types
+type Macro = String
+
 -- | Pen status
 data Mode = Up
           | Down
@@ -87,6 +90,34 @@ steps num = steps (pred num) ++ [Move ((Lit (pred num)), (Lit num))] ++ [Move ((
 -- * Part 5: Define a Haskell function macros :: Prog -> [Macro] that returns a list of the names
 --           of all of the macros that are defined anywhere in a given MiniLogo program.
 --
+-- | Tests
+-- >>> macros []
+-- []
+--
+-- >>> macros [Pen Up]
+-- []
+--
+-- >>> macros [Pen Up, Define "test" [] []]
+-- ["test"]
+--
+macros :: Prog -> [Macro]
+macros []          = []
+macros (x:xs)
+        | (ismacro x) == True = macroname x : macros xs
+        | otherwise           = macros xs
+
+
+-- Helper functions
+
+-- | Determines if the given MiniLog command is a macro definition.
+ismacro :: Cmd -> Bool
+ismacro (Define _ _ _) = True
+ismacro _              = False
+
+
+-- | Returns the macro name of a given macro definition
+macroname :: Cmd -> Macro
+macroname (Define m _ _) = m
 
 
 --

@@ -1,5 +1,6 @@
 module MiniLogo where
 
+import Prelude hiding (Num)
 
 --
 -- * Part 1: Define the abstract syntax of MiniLogo as a set of Haskell data types.
@@ -11,9 +12,12 @@ data Mode = Up
           deriving (Show,Eq)
 
 
--- | Different expressions
+-- | Different expressions.
+--   Ref String    - A reference to a string variable name
+--   Lit Num       - A literal integer
+--   Add Expr Expr - Adding two expressions
 data Expr = Ref String
-          | Num
+          | Lit Int
           | Add Expr Expr
           deriving (Eq,Show)
 
@@ -74,7 +78,9 @@ nix = Define "nix" ["x", "y", "w", "h"]
 -- * Part 4: Define a Haskell function steps :: Int -> Prog that constructs a MiniLogo
 --           program that draws a staircase of n steps starting from (0,0).
 --
-
+steps :: Int -> Prog
+steps 0   = [Pen Up, Move (Lit 0, Lit 0), Pen Down]
+steps num = steps (pred num) ++ [Move ((Lit (pred num)), (Lit num))] ++ [Move ((Lit num), (Lit num))]
 
 
 --

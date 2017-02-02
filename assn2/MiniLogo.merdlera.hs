@@ -119,7 +119,7 @@ macros (x:xs)
         | otherwise           = macros xs
 
 
--- Helper functions
+-- ** Helper functions **
 
 -- | Determines if the given MiniLog command is a macro definition.
 ismacro :: Cmd -> Bool
@@ -149,7 +149,7 @@ pretty []     = ""
 pretty (x:xs) = prettifyCmd x ++ pretty xs
 
 
--- Helper functions
+-- ** Helper functions **
 
 -- | Returns the string representation of a given abstract MiniLog command.
 --
@@ -251,12 +251,15 @@ optE (Add a b)             = Add (optE a) (optE b)
 -- >>> optP [Pen Up]
 -- [Pen Up]
 --
+-- >>> optP [(Call "test" [(Add (Add (Lit 2) (Lit 3)) (Ref "x"))])]
+-- [Call "test" [Add (Lit 5) (Ref "x")]]
+--
 optP :: Prog -> Prog
 optP [] = []
-optP [Pen a] = [Pen a]
+optP (x:xs) = optC x : optP xs
 
 
--- Helper Functions
+-- ** Helper Functions **
 
 -- | Optimizes a given list of MiniLog abstract expressions.
 --
@@ -274,12 +277,16 @@ optEs (x:xs) = optE x : optEs xs
 
 -- | Optimizes a given MiniLog abstract command.
 --
--- >> optC (Pen Up)
+-- >>> optC (Pen Up)
 -- Pen Up
 --
--- >> optC (Move ((Lit 5), (Lit 2)))
--- Move ((Lit 5), (Lit 2))
+-- >>> optC (Move ((Lit 5), (Lit 2)))
+-- Move (Lit 5,Lit 2)
+--
+-- >>> optC (Call "test" [(Add (Add (Lit 2) (Lit 3)) (Ref "x"))])
+-- Call "test" [Add (Lit 5) (Ref "x")]
 --
 optC :: Cmd -> Cmd
 optC (Move (a, b))    = Move ((optE a), (optE b))
---optC (Call a [x:xs])  = Call a (optE x : )
+optC (Call a (x:xs))  = Call a (optE x : optEs xs)
+optC a                = a

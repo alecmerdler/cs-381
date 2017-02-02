@@ -115,7 +115,7 @@ steps num = steps (pred num) ++ [Move ((Lit (pred num)), (Lit num))] ++ [Move ((
 macros :: Prog -> [Macro]
 macros []          = []
 macros (x:xs)
-        | (ismacro x) == True = macroname x : macros xs
+        | (ismacro x) == True = macroName x : macros xs
         | otherwise           = macros xs
 
 
@@ -128,8 +128,8 @@ ismacro _              = False
 
 
 -- | Returns the macro name of a given macro definition
-macroname :: Cmd -> Macro
-macroname (Define m _ _) = m
+macroName :: Cmd -> Macro
+macroName (Define m _ _) = m
 
 
 --
@@ -210,6 +210,7 @@ prettifyVars [x]    = x
 prettifyVars (x:xs) = x ++ ", " ++ prettifyVars xs
 
 
+--
 -- | Bonus - Part 7: Define a Haskell function optE :: Expr -> Expr that partially evaluates expressions by
 --                   replacing any additions of literals with the result.
 --
@@ -240,8 +241,45 @@ optE (Add (Ref a) (Lit b)) = Add (Ref a) (Lit b)
 optE (Add a b)             = Add (optE a) (optE b)
 
 
+--
 -- | Bonus - Part 8: Define a Haskell function optP :: Prog -> Prog that optimizes all of the expressions
 --                   contained in a given program using optE.
 --
+-- >>> optP []
+-- []
+--
+-- >>> optP [Pen Up]
+-- [Pen Up]
+--
 optP :: Prog -> Prog
-optP _ = [Pen Up]
+optP [] = []
+optP [Pen a] = [Pen a]
+
+
+-- Helper Functions
+
+-- | Optimizes a given list of MiniLog abstract expressions.
+--
+-- >>> optEs []
+-- []
+--
+-- >>> optEs [(Add (Add (Lit 2) (Lit 3)) (Ref "x"))]
+-- [Add (Lit 5) (Ref "x")]
+--
+optEs :: [Expr] -> [Expr]
+optEs []     = []
+optEs [x]    = [optE x]
+optEs (x:xs) = optE x : optEs xs
+
+
+-- | Optimizes a given MiniLog abstract command.
+--
+-- >> optC (Pen Up)
+-- Pen Up
+--
+-- >> optC (Move ((Lit 5), (Lit 2)))
+-- Move ((Lit 5), (Lit 2))
+--
+optC :: Cmd -> Cmd
+optC (Move (a, b))    = Move ((optE a), (optE b))
+--optC (Call a [x:xs])  = Call a (optE x : )

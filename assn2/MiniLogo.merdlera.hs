@@ -213,8 +213,35 @@ prettifyVars (x:xs) = x ++ ", " ++ prettifyVars xs
 -- | Bonus - Part 7: Define a Haskell function optE :: Expr -> Expr that partially evaluates expressions by
 --                   replacing any additions of literals with the result.
 --
+-- >>> optE (Ref "x")
+-- Ref "x"
+--
+-- >>> optE (Lit 9)
+-- Lit 9
+--
+-- >>> optE (Add (Lit 5) (Lit 2))
+-- Lit 7
+--
+-- >>> optE (Add (Lit 5) (Ref "x"))
+-- Add (Lit 5) (Ref "x")
+--
+-- >>> optE (Add (Ref "x") (Lit 8))
+-- Add (Ref "x") (Lit 8)
+--
+-- >>> optE (Add (Add (Lit 2) (Lit 3)) (Ref "x"))
+-- Add (Lit 5) (Ref "x")
+--
+optE :: Expr -> Expr
+optE (Ref a)               = Ref a
+optE (Lit a)               = Lit a
+optE (Add (Lit a) (Lit b)) = Lit (a + b)
+optE (Add (Lit a) (Ref b)) = Add (Lit a) (Ref b)
+optE (Add (Ref a) (Lit b)) = Add (Ref a) (Lit b)
+optE (Add a b)             = Add (optE a) (optE b)
 
 
 -- | Bonus - Part 8: Define a Haskell function optP :: Prog -> Prog that optimizes all of the expressions
 --                   contained in a given program using optE.
 --
+optP :: Prog -> Prog
+optP _ = [Pen Up]

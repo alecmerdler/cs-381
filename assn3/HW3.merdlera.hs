@@ -31,6 +31,9 @@ cmd (Move x2 y2) (b, x1, y1) = ((b, x2, y2), ((x1, y1), (x2, y2)))
 -- >>> prog [(Pen Up)] (Down, 0, 0)
 -- ((Up,0,0),[((0,0),(0,0))])
 --
+-- >>> prog [(Move 1 1)] (Down, 0, 0)
+-- ((Down,1,1),[((0,0),(1,1))])
+--
 prog :: Prog -> State -> (State, [Line])
 prog [] (a, x, y) = ((a, x, y), [((0, 0), (0, 0))])
 prog [a] b = composeCmd (cmd a b)
@@ -42,7 +45,7 @@ prog (a:bs) (c, x, y) = undefined
 --
 
 --
--- |
+-- | FIXME: Use anonymous function
 --
 composeCmd :: (State, Line) -> (State, [Line])
 composeCmd (a, b) = (a, [b])

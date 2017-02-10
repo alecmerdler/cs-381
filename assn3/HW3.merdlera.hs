@@ -125,7 +125,7 @@ applyCmds (c:cmds) (state, lines) = case line of
 --   Add as many helper functions as you want.
 --
 amazing :: Prog
-amazing = (readyPen (0, 0)) ++ []
+amazing = (liftPen (0, 0)) ++ []
 
 
 --
@@ -136,11 +136,11 @@ amazing = (readyPen (0, 0)) ++ []
 -- | Returns a set of commands that moves the pen to the given coordinates without drawing a line,
 --   then puts the pen down.
 --
---   >> readyPen (1, 0)
+--   >> liftPen (1, 0)
 --   [Pen Up,Move 1 0,Pen Down]
 --
---   >> prog (readyPen (1, 0)) (Up, (7, 7))
+--   >> prog (liftPen (1, 0)) (Up, (7, 7))
 --   ((Down,(1,0)),[])
 --
-readyPen :: (Int, Int) -> Prog
-readyPen (x, y) = [Pen Up, Move x y, Pen Down]
+liftPen :: (Int, Int) -> Prog
+liftPen (x, y) = [Pen Up, Move x y, Pen Down]

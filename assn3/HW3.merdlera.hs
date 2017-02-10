@@ -68,3 +68,27 @@ applyCmds (c:cmds) (state, lines) = case line of
                                         Nothing -> applyCmds cmds (newState, lines)
                                     where (newState, line) = cmd c state
 
+
+--
+-- | Extra Credit: Use your creativity to produce a MiniMiniLogo program that draws an amazing picture!
+--
+-- >> prog amazing (Up, 0, 0)
+--
+--
+amazing :: Prog
+amazing = undefined
+
+
+--
+-- * Helper Functions
+--
+
+--
+-- | Returns a set of commands that moves the pen to the given coordinates without drawing a line,
+--   then puts the pen down.
+--
+-- >>> readyPen (1, 0)
+-- [Pen Up,Move 1 0,Pen Down]
+--
+readyPen :: (Int, Int) -> Prog
+readyPen (x, y) = [Pen Up, Move x y, Pen Down]

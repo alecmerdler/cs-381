@@ -125,13 +125,16 @@ applyCmds (c:cmds) (state, lines) = case line of
 --   Add as many helper functions as you want.
 --
 -- >>> prog amazing (Up, (0, 0))
--- ((Down,(4,0)),[((3,3),(0,3)),((0,3),(0,0)),((0,0),(3,0)),((7,3),(4,3)),((4,3),(4,2)),((4,2),(7,2)),((7,2),(7,0)),((7,0),(4,0))])
+-- ((Down,(4,20)),[((3,23),(0,23)),((0,23),(0,20)),((0,20),(3,20)),((7,23),(4,23)),((4,23),(4,22)),((4,22),(7,22)),((7,22),(7,20)),((7,20),(4,20))])
+--
+-- >>> draw amazing
+--
 --
 amazing :: Prog
-amazing = liftPen (3, 3) ++
-          [Move 0 3, Move 0 0, Move 3 0] ++
-          liftPen (7, 3) ++
-          [Move 4 3, Move 4 2, Move 7 2, Move 7 0, Move 4 0]
+amazing = liftPen (3, 23) ++
+          [Move 0 23, Move 0 20, Move 3 20] ++
+          liftPen (7, 23) ++
+          [Move 4 23, Move 4 22, Move 7 22, Move 7 20, Move 4 20]
 
 
 --

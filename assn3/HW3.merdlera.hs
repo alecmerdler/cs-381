@@ -124,8 +124,11 @@ applyCmds (c:cmds) (state, lines) = case line of
 -- | This should be a MiniMiniLogo program that draws an amazing picture.
 --   Add as many helper functions as you want.
 --
+-- >>> prog amazing (Up, (0, 0))
+-- ((Down,(3,0)),[((3,3),(0,3)),((0,3),(0,0)),((0,0),(3,0))])
+--
 amazing :: Prog
-amazing = (liftPen (0, 0)) ++ []
+amazing = (liftPen (3, 3)) ++ [Move 0 3, Move 0 0, Move 3 0]
 
 
 --

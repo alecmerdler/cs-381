@@ -4,43 +4,83 @@ import Render
 import MiniMiniLogo
 
 
--- | Represents the state of the pen
-type State = (Mode, Int, Int)
+--
+-- * Semantics of MiniMiniLogo
+--
+
+-- NOTE:
+--   * MiniMiniLogo.hs defines the abstract syntax of MiniMiniLogo and some
+--     functions for generating MiniMiniLogo programs. It contains the type
+--     definitions for Mode, Cmd, and Prog.
+--   * Render.hs contains code for rendering the output of a MiniMiniLogo
+--     program in HTML5. It contains the types definitions for Point and Line.
+
+-- | A type to represent the current state of the pen.
+type State = (Mode,Point)
+
+-- | The initial state of the pen.
+start :: State
+start = (Up,(0,0))
+
+-- | A function that renders the image to HTML. Only works after you have
+--   implemented `prog`. Applying `draw` to a MiniMiniLogo program will
+--   produce an HTML file named MiniMiniLogo.html, which you can load in
+--   your browswer to view the rendered image.
+draw :: Prog -> IO ()
+draw p = let (_,ls) = prog p start in toHTML ls
 
 
+-- Semantic domains:
+--   * Cmd:  State -> (State, Maybe Line)
+--   * Prog: State -> (State, [Line])
+
+
+-- | Semantic function for Cmd.
 --
--- | Part I: Implement cmd, the semantic function for MiniMiniLogo commands (Cmd).
+--   >>> cmd (Pen Down) (Up,(2,3))
+--   ((Down,(2,3)),Nothing)
 --
--- >>> cmd (Pen Up) (Down, 0, 0)
--- ((Up,0,0),Nothing)
+--   >>> cmd (Pen Up) (Down,(2,3))
+--   ((Up,(2,3)),Nothing)
 --
--- >>> cmd (Move 1 1) (Down, 0, 0)
--- ((Down,1,1),Just ((0,0),(1,1)))
+--   >>> cmd (Move 4 5) (Up,(2,3))
+--   ((Up,(4,5)),Nothing)
+--
+--   >>> cmd (Move 4 5) (Down,(2,3))
+--   ((Down,(4,5)),Just ((2,3),(4,5)))
+--
+--   >>> cmd (Pen Up) (Down, (0, 0))
+--   ((Up,(0,0)),Nothing)
+--
+--   >>> cmd (Move 1 1) (Down, (0, 0))
+--   ((Down,(1,1)),Just ((0,0),(1,1)))
 --
 cmd :: Cmd -> State -> (State, Maybe Line)
-cmd (Pen a) (_, x, y)        = ((a, x, y), Nothing)
-cmd (Move x2 y2) (state, x1, y1) = ((state, x2, y2), Just ((x1, y1), (x2, y2)))
+cmd (Pen a) (_, (x, y))        = ((a, (x, y)), Nothing)
+cmd (Move x2 y2) (mode, (x1, y1)) = case mode of
+                                        Up   -> ((mode, (x2, y2)), Nothing)
+                                        Down -> ((mode, (x2, y2)), Just ((x1, y1), (x2, y2)))
 
 
 --
 -- | Part II: Implement prog, the semantic function for MiniMiniLogo programs (Prog).
 --
--- >>> prog [] (Up, 0, 4)
--- ((Up,0,4),[])
+-- >>> prog [] (Up, (0, 4))
+-- ((Up,(0,4)),[])
 --
--- >>> prog [(Pen Up)] (Down, 0, 0)
--- ((Up,0,0),[])
+-- >>> prog [(Pen Up)] (Down, (0, 0))
+-- ((Up,(0,0)),[])
 --
--- >>> prog [(Move 1 1)] (Down, 0, 0)
--- ((Down,1,1),[Just ((0,0),(1,1))])
+-- >>> prog [(Move 1 1)] (Down, (0, 0))
+-- ((Down,(1,1)),[((0,0),(1,1))])
 --
--- >>> prog [(Move 1 2), (Pen Up)] (Down, 0, 0)
--- ((Up,1,2),[Just ((0,0),(1,2))])
+-- >>> prog [(Move 1 2), (Pen Up)] (Down, (0, 0))
+-- ((Up,(1,2)),[((0,0),(1,2))])
 --
--- >> prog [(Move 1 2), (Move 1 3)] (Down 0 0)
--- ((Down,1,3),[Just ((0,0),(1,2)),Just ((1,2),(1,3))]
+-- >> prog [(Move 1 2), (Move 1 3)] (Down (0 0))
+-- ((Down,(1,3)),[((0,0),(1,2)),((1,2),(1,3))]
 --
-prog :: Prog -> State -> (State, [Maybe Line])
+prog :: Prog -> State -> (State, [Line])
 prog [] state   = (state, [])
 prog cmds state = applyCmds cmds (state, [])
 
@@ -52,19 +92,19 @@ prog cmds state = applyCmds cmds (state, [])
 --
 -- | Recursively applies a list of commands while updating pen state and accummulating drawn lines.
 --
--- >>> applyCmds [(Pen Up)] ((Down, 0, 1), [])
--- ((Up,0,1),[])
+-- >>> applyCmds [(Pen Up)] ((Down, (0, 1)), [])
+-- ((Up,(0,1)),[])
 --
--- >>> applyCmds [(Move 2 2)] ((Down, 0, 0), [])
--- ((Down,2,2),[Just ((0,0),(2,2))])
+-- >>> applyCmds [(Move 2 2)] ((Down, (0, 0)), [])
+-- ((Down,(2,2)),[((0,0),(2,2))])
 --
--- >>> applyCmds [(Move 2 2), (Move 3 3)] ((Down, 1, 0), [Just ((0,0),(2,2))])
--- ((Down,3,3),[Just ((2,2),(3,3)),Just ((1,0),(2,2)),Just ((0,0),(2,2))])
+-- >>> applyCmds [(Move 2 2), (Move 3 3)] ((Down, (1, 0)), [((0,0),(2,2))])
+-- ((Down,(3,3)),[((2,2),(3,3)),((1,0),(2,2)),((0,0),(2,2))])
 --
-applyCmds :: [Cmd] -> (State, [Maybe Line]) -> (State, [Maybe Line])
+applyCmds :: [Cmd] -> (State, [Line]) -> (State, [Line])
 applyCmds [] acc                  = acc
 applyCmds (c:cmds) (state, lines) = case line of
-                                        Just l -> applyCmds cmds (newState, line : lines)
+                                        Just l -> applyCmds cmds (newState, l : lines)
                                         Nothing -> applyCmds cmds (newState, lines)
                                     where (newState, line) = cmd c state
 
@@ -72,11 +112,11 @@ applyCmds (c:cmds) (state, lines) = case line of
 --
 -- | Extra Credit: Use your creativity to produce a MiniMiniLogo program that draws an amazing picture!
 --
--- >> prog amazing (Up, 0, 0)
---
+-- >> prog amazing (Up, (0, 0))
+-- ((Up,0,0),[])
 --
 amazing :: Prog
-amazing = undefined
+amazing = (readyPen (0, 0)) ++ []
 
 
 --
@@ -87,8 +127,11 @@ amazing = undefined
 -- | Returns a set of commands that moves the pen to the given coordinates without drawing a line,
 --   then puts the pen down.
 --
--- >>> readyPen (1, 0)
+-- >> readyPen (1, 0)
 -- [Pen Up,Move 1 0,Pen Down]
+--
+-- >> prog (readyPen (1, 0)) (Up, (7, 7))
+-- ((Down,(1,0)),[])
 --
 readyPen :: (Int, Int) -> Prog
 readyPen (x, y) = [Pen Up, Move x y, Pen Down]

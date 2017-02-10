@@ -26,7 +26,7 @@ cmd (Move x2 y2) (b, x1, y1) = ((b, x2, y2), Just ((x1, y1), (x2, y2)))
 -- | Part II: Implement prog, the semantic function for MiniMiniLogo programs (Prog).
 --
 -- >>> prog [] (Up, 0, 4)
--- ((Up,0,4),[Nothing])
+-- ((Up,0,4),[])
 --
 -- >>> prog [(Pen Up)] (Down, 0, 0)
 -- ((Up,0,0),[Nothing])
@@ -34,20 +34,28 @@ cmd (Move x2 y2) (b, x1, y1) = ((b, x2, y2), Just ((x1, y1), (x2, y2)))
 -- >>> prog [(Move 1 1)] (Down, 0, 0)
 -- ((Down,1,1),[Just ((0,0),(1,1))])
 --
--- >> prog [(Move 1 2), (Pen Up)] (Down, 0, 0)
--- ((Up,1,2),[Just ((0,0),(1,2))])
+-- >>> prog [(Move 1 2), (Pen Up)] (Down, 0, 0)
+-- ((Up,1,2),[Nothing,Just ((0,0),(1,2))])
 --
 -- >> prog [(Move 1 2), (Move 1 3)] (Down 0 0)
--- ((Down,1,3),[Just ((0,0),(1,2)),Just ((1,2),(1,3))]
+-- ((Down,1,3),[Nothing,Just ((0,0),(1,2)),Just ((1,2),(1,3))]
 --
 prog :: Prog -> State -> (State, [Maybe Line])
-prog [] state       = (state, [Nothing])
-prog (c:cmds) state = applyCmd c (state, [])
+prog [] state   = (state, [])
+prog cmds state = applyCmds cmds (state, [])
 
 
 --
 -- * Helper Functions
 --
+
+--
+-- | Recursively applies a list of commands while updating pen state and accummulating drawn lines.
+--
+applyCmds :: [Cmd] -> (State, [Maybe Line]) -> (State, [Maybe Line])
+applyCmds [] acc                  = acc
+applyCmds (c:cmds) (state, lines) = applyCmds cmds (newState, line : lines)
+                                    where (newState, line) = cmd c state
 
 --
 -- | Applies a given command to an existing state and set of lines

@@ -1,4 +1,4 @@
-module HW3 (cmd) where
+module HW3 (State, cmd, prog) where
 
 import Render
 import MiniMiniLogo
@@ -19,7 +19,7 @@ type State = (Mode, Int, Int)
 --
 cmd :: Cmd -> State -> (State, Maybe Line)
 cmd (Pen a) (_, x, y)        = ((a, x, y), Nothing)
-cmd (Move x2 y2) (b, x1, y1) = ((b, x2, y2), Just ((x1, y1), (x2, y2)))
+cmd (Move x2 y2) (state, x1, y1) = ((state, x2, y2), Just ((x1, y1), (x2, y2)))
 
 
 --

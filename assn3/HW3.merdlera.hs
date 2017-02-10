@@ -29,16 +29,16 @@ cmd (Move x2 y2) (b, x1, y1) = ((b, x2, y2), Just ((x1, y1), (x2, y2)))
 -- ((Up,0,4),[])
 --
 -- >>> prog [(Pen Up)] (Down, 0, 0)
--- ((Up,0,0),[Nothing])
+-- ((Up,0,0),[])
 --
 -- >>> prog [(Move 1 1)] (Down, 0, 0)
 -- ((Down,1,1),[Just ((0,0),(1,1))])
 --
 -- >>> prog [(Move 1 2), (Pen Up)] (Down, 0, 0)
--- ((Up,1,2),[Nothing,Just ((0,0),(1,2))])
+-- ((Up,1,2),[Just ((0,0),(1,2))])
 --
 -- >> prog [(Move 1 2), (Move 1 3)] (Down 0 0)
--- ((Down,1,3),[Nothing,Just ((0,0),(1,2)),Just ((1,2),(1,3))]
+-- ((Down,1,3),[Just ((0,0),(1,2)),Just ((1,2),(1,3))]
 --
 prog :: Prog -> State -> (State, [Maybe Line])
 prog [] state   = (state, [])
@@ -52,20 +52,13 @@ prog cmds state = applyCmds cmds (state, [])
 --
 -- | Recursively applies a list of commands while updating pen state and accummulating drawn lines.
 --
+-- >>> applyCmds [(Pen Up)] ((Down, 0, 1), [])
+-- ((Up,0,1),[])
+--
 applyCmds :: [Cmd] -> (State, [Maybe Line]) -> (State, [Maybe Line])
 applyCmds [] acc                  = acc
-applyCmds (c:cmds) (state, lines) = applyCmds cmds (newState, line : lines)
+applyCmds (c:cmds) (state, lines) = case line of
+                                        Just l -> applyCmds cmds (newState, line : lines)
+                                        Nothing -> applyCmds cmds (newState, lines)
                                     where (newState, line) = cmd c state
 
---
--- | Applies a given command to an existing state and set of lines
---
--- >>> applyCmd (Pen Down) ((Up, 0, 0), [])
--- ((Down,0,0),[Nothing])
---
--- >>> applyCmd (Move 1 1) ((Down, 0, 0), [Just ((0, 0), (2, 2))])
--- ((Down,1,1),[Just ((0,0),(1,1)),Just ((0,0),(2,2))])
---
-applyCmd :: Cmd -> (State, [Maybe Line]) -> (State, [Maybe Line])
-applyCmd newCmd (state, [])    = (\ (newState, line) -> (newState, [line])) (cmd newCmd state)
-applyCmd newCmd (state, lines) = (\ (newState, line) -> (newState, line : lines)) (cmd newCmd state)

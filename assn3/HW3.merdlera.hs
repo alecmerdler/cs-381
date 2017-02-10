@@ -55,6 +55,12 @@ prog cmds state = applyCmds cmds (state, [])
 -- >>> applyCmds [(Pen Up)] ((Down, 0, 1), [])
 -- ((Up,0,1),[])
 --
+-- >>> applyCmds [(Move 2 2)] ((Down, 0, 0), [])
+-- ((Down,2,2),[Just ((0,0),(2,2))])
+--
+-- >>> applyCmds [(Move 2 2), (Move 3 3)] ((Down, 1, 0), [Just ((0,0),(2,2))])
+-- ((Down,3,3),[Just ((2,2),(3,3)),Just ((1,0),(2,2)),Just ((0,0),(2,2))])
+--
 applyCmds :: [Cmd] -> (State, [Maybe Line]) -> (State, [Maybe Line])
 applyCmds [] acc                  = acc
 applyCmds (c:cmds) (state, lines) = case line of

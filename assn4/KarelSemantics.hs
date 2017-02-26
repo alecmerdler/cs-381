@@ -17,12 +17,21 @@ import KarelState
 -- >>> test (Facing North) (\x -> Nothing) ((1,1), North, 0)
 -- True
 --
+-- >>> test (Facing West) (\x -> Nothing) ((1,1), North, 0)
+-- False
+--
+-- >> test (Clear Front) (\x -> Nothing)  ((1,1), North, 0)
+-- False
+--
+-- >> test (Clear Front) (\x -> 0)  ((1,1), North, 0)
+-- True
+--
 test :: Test -> World -> Robot -> Bool
-test (Not t) _ _ = undefined
-test (Facing c1) _ (_, c2, _) = c1 == c2
-test (Clear d) _ _ = undefined
-test (Beeper) _ _ = undefined
-test (Empty) _ _ = undefined
+test (Not t) w r     = not (test t w r)
+test (Facing c1) _ r = c1 == getFacing r
+test (Clear d) w r   = undefined
+test (Beeper) _ _    = undefined
+test (Empty) _ _     = undefined
 
 
 -- | Valuation function for Stmt.

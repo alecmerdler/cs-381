@@ -20,16 +20,16 @@ import KarelState
 -- >>> test (Facing West) (\x -> Nothing) ((1,1), North, 0)
 -- False
 --
--- >> test (Clear Front) (\x -> Nothing)  ((1,1), North, 0)
+-- >>> test (Clear Front) (\x -> Nothing)  ((1,1), North, 0)
 -- False
 --
--- >> test (Clear Front) (\x -> 0)  ((1,1), North, 0)
+-- >>> test (Clear Front) (\x -> Just 0)  ((1,1), North, 0)
 -- True
 --
 test :: Test -> World -> Robot -> Bool
 test (Not t) w r     = not (test t w r)
 test (Facing c1) _ r = c1 == getFacing r
-test (Clear d) w r   = undefined
+test (Clear d) w r   = isClear (relativePos d r) w
 test (Beeper) _ _    = undefined
 test (Empty) _ _     = undefined
 

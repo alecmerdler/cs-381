@@ -14,28 +14,28 @@ import KarelState
 
 -- | Valuation function for Test.
 --
--- >>> test (Facing North) (\x -> Nothing) ((1,1), North, 0)
+-- >>> test (Facing North) (\x -> Nothing) ((1, 1), North, 0)
 -- True
 --
--- >>> test (Facing West) (\x -> Nothing) ((1,1), North, 0)
+-- >>> test (Facing West) (\x -> Nothing) ((1, 1), North, 0)
 -- False
 --
--- >>> test (Clear Front) (\x -> Nothing)  ((1,1), North, 0)
+-- >>> test (Clear Front) (\x -> Nothing)  ((1, 1), North, 0)
 -- False
 --
--- >>> test (Clear Front) (\x -> Just 0)  ((1,1), North, 0)
+-- >>> test (Clear Front) (\x -> Just 0)  ((1, 1), North, 0)
 -- True
 --
--- >>> test Beeper (\x -> Nothing)  ((1,1), North, 0)
+-- >>> test Beeper (\x -> Nothing)  ((1, 1), North, 0)
 -- False
 --
--- >>> test Beeper (\x -> Just 1)  ((1,1), North, 0)
+-- >>> test Beeper (\x -> Just 1)  ((1, 1), North, 0)
 -- True
 --
--- >>> test Empty (\x -> Nothing) ((1,1), North, 0)
+-- >>> test Empty (\x -> Nothing) ((1, 1), North, 0)
 -- True
 --
--- >>> test Empty (\x -> Nothing) ((1,1), North, 2)
+-- >>> test Empty (\x -> Nothing) ((1, 1), North, 2)
 -- False
 --
 test :: Test -> World -> Robot -> Bool
@@ -47,6 +47,15 @@ test (Empty) _ r     = isEmpty r
 
 
 -- | Valuation function for Stmt.
+--
+-- >>> stmt Shutdown [] (\x -> Nothing) ((1, 1), North, 0)
+-- Done: ((1,1),North,0)
+--
+-- >>> stmt PickBeeper [] (\x -> Nothing) ((1, 1), North, 0)
+-- Error: No beeper to pick at: (1,1)
+--
+-- >>> stmt PickBeeper [] (\x -> Just 1) ((1, 1), North, 0)
+-- OK: ((1,1),North,1)
 --
 stmt :: Stmt -> Defs -> World -> Robot -> Result
 stmt Shutdown   _ _ r = Done r

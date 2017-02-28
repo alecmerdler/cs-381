@@ -66,17 +66,31 @@ test (Empty) _ r     = isEmpty r
 -- >>> stmt (Turn Left) [] (\x -> Nothing) ((1, 1), North, 0)
 -- OK: ((1,1),West,0)
 --
+-- >>> stmt (Block []) [] (\x -> Nothing) ((1, 1), North, 0)
+-- OK: ((1,1),North,0)
+--
+-- >>> stmt (Block [PickBeeper, Shutdown]) [] (\x -> Just 1) ((1, 1), North, 0)
+-- Done: ((1,1),North,1)
+--
+-- >>> stmt (Block [PickBeeper, Shutdown]) [] (\x -> Nothing) ((1, 1), North, 0)
+-- Error: No beeper to pick at: (1,1)
+--
 stmt :: Stmt -> Defs -> World -> Robot -> Result
-stmt Shutdown _ _ r   = Done r
-stmt PickBeeper _ w r = let p = getPos r
-                        in if hasBeeper p w
-                              then OK (decBeeper p w) (incBag r)
-                              else Error ("No beeper to pick at: " ++ show p)
-stmt PutBeeper _ w r  = let p = getPos r
-                        in if isEmpty r
-                              then Error ("No beepers in bag")
-                              else OK (incBeeper p w) (decBag r)
-stmt (Turn d) _ w r   = OK w (setFacing (cardTurn d (getFacing r)) r)
+stmt Shutdown _ _ r       = Done r
+stmt PickBeeper _ w r     = let p = getPos r
+                            in if hasBeeper p w
+                                  then OK (decBeeper p w) (incBag r)
+                                  else Error ("No beeper to pick at: " ++ show p)
+stmt PutBeeper _ w r      = let p = getPos r
+                            in if isEmpty r
+                                  then Error ("No beepers in bag")
+                                  else OK (incBeeper p w) (decBag r)
+stmt (Turn d) _ w r       = OK w (setFacing (cardTurn d (getFacing r)) r)
+stmt (Block []) _ w r     = OK w r
+stmt (Block (s:ss)) d w r = case stmt s d w r of
+                                 (OK w' r') -> stmt (Block ss) d w' r'
+                                 (Done r')  -> Done r'
+                                 (Error e)  -> Error e
 stmt _ _ _ _ = undefined
 
 

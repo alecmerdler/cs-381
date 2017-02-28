@@ -124,7 +124,10 @@ stmt (If t s1 s2) d w r   = if (test t w r)
                                 then stmt s1 d w r
                                 else stmt s2 d w r
 stmt (While t s) d w r    = if (test t w r)
-                               then stmt (While t s) d w r
+                               then case stmt s d w r of
+                                    (OK w' r') -> stmt (While t s) d w' r'
+                                    (Done r')  -> Done r'
+                                    (Error e)  -> Error e
                                else OK w r
 stmt (Block []) _ w r     = OK w r
 stmt (Block (s:ss)) d w r = case stmt s d w r of

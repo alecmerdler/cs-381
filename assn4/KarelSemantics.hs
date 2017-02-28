@@ -51,6 +51,12 @@ test (Empty) _ r     = isEmpty r
 -- >>> stmt Shutdown [] (\x -> Nothing) ((1, 1), North, 0)
 -- Done: ((1,1),North,0)
 --
+-- >>> stmt Move [] (\x -> Nothing) ((1, 1), North, 0)
+-- Error: Blocked at: (1,2)
+--
+-- >>> stmt Move [] (\x -> Just 1) ((1, 1), North, 0)
+-- OK: ((1,2),North,0)
+--
 -- >>> stmt PickBeeper [] (\x -> Nothing) ((1, 1), North, 0)
 -- Error: No beeper to pick at: (1,1)
 --
@@ -92,6 +98,10 @@ test (Empty) _ r     = isEmpty r
 --
 stmt :: Stmt -> Defs -> World -> Robot -> Result
 stmt Shutdown _ _ r       = Done r
+stmt Move _ w r           = let p = relativePos Front r
+                            in if isClear p w
+                                  then OK w (setPos p r)
+                                  else Error ("Blocked at: " ++ show p)
 stmt PickBeeper _ w r     = let p = getPos r
                             in if hasBeeper p w
                                   then OK (decBeeper p w) (incBag r)
@@ -101,14 +111,6 @@ stmt PutBeeper _ w r      = let p = getPos r
                                   then Error ("No beepers in bag")
                                   else OK (incBeeper p w) (decBag r)
 stmt (Turn d) _ w r       = OK w (setFacing (cardTurn d (getFacing r)) r)
-stmt (Block []) _ w r     = OK w r
-stmt (Block (s:ss)) d w r = case stmt s d w r of
-                                 (OK w' r') -> stmt (Block ss) d w' r'
-                                 (Done r')  -> Done r'
-                                 (Error e)  -> Error e
-stmt (If t s1 s2) d w r   = if (test t w r)
-                                then stmt s1 d w r
-                                else stmt s2 d w r
 stmt (Call m) d w r       = case lookup m d of
                                  (Just a) -> stmt a d w r
                                  _        -> Error ("Undefined macro: " ++ m)
@@ -118,7 +120,17 @@ stmt (Iterate i s) d w r  = if i > 0
                                          (Done r')  -> Done r'
                                          (Error e)  -> Error e
                                else OK w r
-stmt _ _ _ _ = undefined
+stmt (If t s1 s2) d w r   = if (test t w r)
+                                then stmt s1 d w r
+                                else stmt s2 d w r
+stmt (While t s) d w r    = if (test t w r)
+                               then stmt (While t s) d w r
+                               else OK w r
+stmt (Block []) _ w r     = OK w r
+stmt (Block (s:ss)) d w r = case stmt s d w r of
+                                 (OK w' r') -> stmt (Block ss) d w' r'
+                                 (Done r')  -> Done r'
+                                 (Error e)  -> Error e
 
 
 -- | Run a Karel program.

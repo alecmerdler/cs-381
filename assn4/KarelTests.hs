@@ -27,7 +27,7 @@ import KarelExamples
 --
 --   >>> prog ([],Block [PutBeeper,PickBeeper]) emptyWorld (originBot 5)
 --   OK: ((0,0),North,5)
---   
+--
 --   >>> prog ([],Block [PutBeeper,Move,Turn Back,Move,PickBeeper]) emptyWorld (originBot 5)
 --   OK: ((0,0),South,5)
 --
@@ -48,10 +48,10 @@ import KarelExamples
 --
 --   >>> prog ([],If Beeper (Turn Left) (Turn Right)) emptyWorld (originBot 0)
 --   OK: ((0,0),East,0)
---   
+--
 --   >>> prog ([],If (Not Beeper) (Turn Left) (Turn Right)) emptyWorld (originBot 0)
 --   OK: ((0,0),West,0)
---   
+--
 --   >>> prog ([],Block [PutBeeper,If Beeper (Turn Left) (Turn Right)]) emptyWorld (originBot 3)
 --   OK: ((0,0),West,2)
 --
@@ -78,7 +78,7 @@ import KarelExamples
 
 
 -- | Test macros.
---   
+--
 --   >>> prog ([("A",Turn Right),("B",Turn Left)],Call "A") emptyWorld (originBot 0)
 --   OK: ((0,0),East,0)
 --
@@ -111,7 +111,7 @@ import KarelExamples
 --
 --   >>> prog (fetcher 9) demoWorld demoBot
 --   Done: ((1,1),East,10)
--- 
+--
 --   >>> prog (fetcher 10) demoWorld demoBot
 --   Done: ((9,1),East,9)
 --

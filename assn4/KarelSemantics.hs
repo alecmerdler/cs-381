@@ -64,7 +64,7 @@ test (Empty) _ r     = isEmpty r
 -- OK: ((1,1),North,1)
 --
 -- >>> stmt PutBeeper [] (\x -> Nothing) ((1, 1), North, 0)
--- Error: No beepers in bag
+-- Error: No beeper to put.
 --
 -- >>> stmt PutBeeper [] (\x -> Nothing) ((1, 1), North, 2)
 -- OK: ((1,1),North,1)
@@ -108,7 +108,7 @@ stmt PickBeeper _ w r     = let p = getPos r
                                   else Error ("No beeper to pick at: " ++ show p)
 stmt PutBeeper _ w r      = let p = getPos r
                             in if isEmpty r
-                                  then Error ("No beepers in bag")
+                                  then Error ("No beeper to put.")
                                   else OK (incBeeper p w) (decBag r)
 stmt (Turn d) _ w r       = OK w (setFacing (cardTurn d (getFacing r)) r)
 stmt (Call m) d w r       = case lookup m d of

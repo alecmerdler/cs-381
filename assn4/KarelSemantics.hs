@@ -57,12 +57,22 @@ test (Empty) _ r     = isEmpty r
 -- >>> stmt PickBeeper [] (\x -> Just 1) ((1, 1), North, 0)
 -- OK: ((1,1),North,1)
 --
+-- >>> stmt PutBeeper [] (\x -> Nothing) ((1, 1), North, 0)
+-- Error: No beepers in bag
+--
+-- >>> stmt PutBeeper [] (\x -> Nothing) ((1, 1), North, 2)
+-- OK: ((1,1),North,1)
+--
 stmt :: Stmt -> Defs -> World -> Robot -> Result
 stmt Shutdown   _ _ r = Done r
 stmt PickBeeper _ w r = let p = getPos r
                         in if hasBeeper p w
                               then OK (decBeeper p w) (incBag r)
                               else Error ("No beeper to pick at: " ++ show p)
+stmt PutBeeper _ w r = let p = getPos r
+                       in if isEmpty r
+                             then Error ("No beepers in bag")
+                             else OK (incBeeper p w) (decBag r)
 stmt _ _ _ _ = undefined
 
 

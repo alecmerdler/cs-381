@@ -1,0 +1,8 @@
+test:
+    override:
+      - doctest assn1/Nat.merdlera.hs
+      - doctest assn1/Tree.merdlera.hs
+      - doctest assn2/MiniLogo.merdlera.hs
+      - doctest assn3/HW3.merdlera.hs
+      - doctest assn4/KarelTests.hs
+      - doctest midterm-2/Midterm2Practice.hs

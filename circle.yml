@@ -4,9 +4,14 @@ dependencies:
 
 test:
     override:
-      - /home/ubuntu/.cabal/bin/doctest assn1/Nat.merdlera.hs
-      - /home/ubuntu/.cabal/bin/doctest assn1/Tree.merdlera.hs
-      - /home/ubuntu/.cabal/bin/doctest assn2/MiniLogo.merdlera.hs
-      - /home/ubuntu/.cabal/bin/doctest assn3/HW3.merdlera.hs
-      - /home/ubuntu/.cabal/bin/doctest assn4/KarelTests.hs
-      - /home/ubuntu/.cabal/bin/doctest midterm-2/Midterm2Practice.hs
+      # Assignment 1
+      - cd assn1 && /home/ubuntu/.cabal/bin/doctest Nat.merdlera.hs
+      - cd assn1 && /home/ubuntu/.cabal/bin/doctest Tree.merdlera.hs
+      # Assignment 2
+      - cd assn2 && /home/ubuntu/.cabal/bin/doctest MiniLogo.merdlera.hs
+      # Assignment 3
+      - cd assn3 && /home/ubuntu/.cabal/bin/doctest HW3.merdlera.hs
+      # Assigment 4
+      - cd assn4 && /home/ubuntu/.cabal/bin/doctest KarelTests.hs
+      # Midterm 2
+      - cd midterm-2 && /home/ubuntu/.cabal/bin/doctest Midterm2Practice.hs

@@ -1,3 +1,7 @@
+dependencies:
+    override:
+      - cabal install doctest
+
 test:
     override:
       - doctest assn1/Nat.merdlera.hs

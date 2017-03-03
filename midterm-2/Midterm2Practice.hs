@@ -49,15 +49,27 @@ time (After m t)  = (time t) + m
 -- >>> time' (AM 2)
 -- Just 120
 --
+-- >>> time' (PM 1)
+-- Just 780
+--
+-- >>> time' (After 13 (AM 8))
+-- Just 493
+--
 time' :: Time -> Maybe Int
 time' Midnight     = Just 0
 time' Noon         = Just (60 * 12)
-time' (AM h)       = if (h > 1 && h < 13)
+time' (AM h)       = if (h > 0 && h < 13)
                         then Just (h * 60)
                         else Nothing
-time' (PM h)       = undefined
-time' (Before m t) = undefined
-time' (After m t)  = undefined
+time' (PM h)       = if (h > 0 && h < 13)
+                        then Just ((time Noon) + (h * 60))
+                        else Nothing
+time' (Before m t) = case time' t of
+                          (Just n) -> Just (n - m)
+                          Nothing -> Nothing
+time' (After m t)  = case time' t of
+                          (Just n) -> Just (n + m)
+                          Nothing -> Nothing
 
 
 --

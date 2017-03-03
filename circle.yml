@@ -1,6 +1,7 @@
 dependencies:
     override:
       - cabal install doctest
+      - alias doctest=/home/ubuntu/.cabal/bin/doctest
 
 test:
     override:

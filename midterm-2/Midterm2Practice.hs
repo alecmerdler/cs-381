@@ -124,4 +124,44 @@ data Expr = N Int
           | Tail Expr
   deriving (Eq,Show)
 
-data Type = TInt | TList | Error
+data Type = TInt
+          | TList
+          | Error
+          deriving (Eq,Show)
+
+
+-- | Type-checking function.
+--
+-- >>> typeOf (N 3)
+-- TInt
+--
+-- >>> typeOf Empty
+-- TList
+--
+-- >>> typeOf (Cons Empty Empty)
+-- Error
+--
+-- >>> typeOf (Cons (N 1) Empty)
+-- TList
+--
+-- >>> typeOf (Head Empty)
+-- TInt
+--
+-- >>> typeOf (Head (N 2))
+-- Error
+--
+-- >>> typeOf (Head (Cons (N 1) Empty))
+-- TInt
+--
+typeOf :: Expr -> Type
+typeOf (N _) = TInt
+typeOf Empty = TList
+typeOf (Cons e1 e2) = case ((typeOf e1), (typeOf e2)) of
+                           (TInt, TList) -> TList
+                           _ -> Error
+typeOf (Head e)     = case typeOf e of
+                           TList -> TInt
+                           _ -> Error
+typeOf (Tail e)     = case typeOf e of
+                           TList -> TInt
+                           _ -> Error

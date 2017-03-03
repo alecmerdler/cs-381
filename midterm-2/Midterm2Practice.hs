@@ -77,7 +77,7 @@ time' (After m t)  = case time' t of
 --      construct immediately moves to the given position. The GoUp construct moves the current position vertically the
 --      indicated number of steps (a negative value will move the current position down). The GoRight construct moves
 --      the current position the indicated number of steps horizontally (negative = left). The Seq construct performs
---      the left move followed by the right move. Define a denotational semantics for this language.
+--      the left move followed by the right move.
 --
 
 type Pos = (Int,Int)
@@ -87,6 +87,27 @@ data Move = JumpTo Pos
           | GoRight Int
           | Seq Move Move
   deriving (Eq,Show)
+
+
+-- | Define a denotational semantics for this language.
+--
+-- >>> move (JumpTo (1,1)) (0,0)
+-- (1,1)
+--
+-- >>> move (GoUp 2) (0,0)
+-- (0,2)
+--
+-- >>> move (GoRight (-3)) (0,0)
+-- (-3,0)
+--
+-- >>> move (Seq (GoUp 1) (GoRight 2)) (0,0)
+-- (2,1)
+--
+move :: Move -> Pos -> Pos
+move (JumpTo p2) _     = p2
+move (GoUp i) (x,y)    = (x,y + i)
+move (GoRight i) (x,y) = (x + i,y)
+move (Seq m1 m2) p     = move m2 (move m1 p)
 
 
 --

@@ -87,6 +87,7 @@ ancestor(X,Y) :- parent(X,C), ancestor(C,Y).
 
 % Extra credit: Define the predicate `related/2`.
 
+% Helper predicate to find descendents
 descendent(X,Y) :- parent(Y,X).
 descendent(X,Y) :- parent(P,X), descendent(P,Y).
 

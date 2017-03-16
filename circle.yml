@@ -17,5 +17,4 @@ test:
       # Midterm 2
       - cd midterm-2 && /home/ubuntu/.cabal/bin/doctest Midterm2Practice.hs
       # Assignment 5
-      - which swipl
-      # - cd assn5 && swipl
+      - cd assn5 && swipl merdlera.pl < test.txt

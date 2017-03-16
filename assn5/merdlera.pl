@@ -86,7 +86,7 @@ ancestor(X,Y) :- parent(X,Y).
 ancestor(X,Y) :- parent(X,C), ancestor(C,Y).
 
 % Extra credit: Define the predicate `related/2`.
-% FIXME: Does not stop execution
+% FIXME: Not working
 related(X,Y) :- child(X,Y).
 related(X,Y) :- parent(X,Y).
 related(X,Y) :- child(X,P), related(P,Y), X \= Y.
@@ -105,9 +105,9 @@ bool(f).
 
 % 1. Define the predicate `cmd/3`, which describes the effect of executing a
 %    command on the stack.
-cmd(C,S1,S2) :- number(C), S2 = [C|S1].
-cmd(C,S1,S2) :- string(C), S2 = [C|S1].
-cmd(C,S1,S2) :- bool(C), S2 = [C|S1].
+cmd(C,S1,S2)                  :- number(C), S2 = [C|S1].
+cmd(C,S1,S2)                  :- string(C), S2 = [C|S1].
+cmd(C,S1,S2)                  :- bool(C), S2 = [C|S1].
 cmd(add,[First,Second|S1],S2) :- S2 = [Result|S1], Result is First + Second.
 cmd(lte,[First,Second|S1],S2) :- S2 = [t|S1], First =< Second.
 cmd(lte,[First,Second|S1],S2) :- S2 = [t|S1], First =< Second.

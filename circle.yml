@@ -1,7 +1,7 @@
 dependencies:
     override:
       - cabal install doctest
-      - sudo add-apt-repository --assume-yes ppa:swi-prolog/stable && sudo apt-get -assume-yes install swi-prolog
+      - sudo add-apt-repository ppa:swi-prolog/stable && sudo apt-get -assume-yes install swi-prolog
 
 test:
     override:

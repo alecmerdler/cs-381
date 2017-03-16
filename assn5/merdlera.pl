@@ -98,8 +98,10 @@ related(X,Y) :- parent(X,C), related(C,Y), X \= Y.
 % Part 2. Language implementation
 %%
 
+% Boolean type
 bool(t).
 bool(f).
+
 
 % 1. Define the predicate `cmd/3`, which describes the effect of executing a
 %    command on the stack.
@@ -108,7 +110,13 @@ cmd(C,S1,S2) :- string(C), S2 = [C|S1].
 cmd(C,S1,S2) :- bool(C), S2 = [C|S1].
 cmd(add,[First,Second|S1],S2) :- S2 = [Result|S1], Result is First + Second.
 cmd(lte,[First,Second|S1],S2) :- S2 = [t|S1], First =< Second.
+cmd(lte,[First,Second|S1],S2) :- S2 = [t|S1], First =< Second.
+cmd(lte,[_,_|S1],S2)          :- S2 = [f|S1].
+cmd(if(P1,_),[t|S1],S2)       :- prog(P1,S1,S2).
+cmd(if(_,P2),[f|S1],S2)       :- prog(P2,S1,S2).
 
 
 % 2. Define the predicate `prog/3`, which describes the effect of executing a
 %    program on the stack.
+prog([Cmd],S1,S2)      :- cmd(Cmd,S1,S2).
+prog([Cmd|Cmds],S1,S3) :- cmd(Cmd,S1,S2), prog(Cmds,S2,S3).

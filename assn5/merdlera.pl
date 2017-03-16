@@ -86,7 +86,7 @@ ancestor(X,Y) :- parent(X,Y).
 ancestor(X,Y) :- parent(X,C), ancestor(C,Y).
 
 % Extra credit: Define the predicate `related/2`.
-% FIXME: Not working
+% FIXME: Not returning false
 related(X,Y) :- child(X,Y).
 related(X,Y) :- parent(X,Y).
 related(X,Y) :- child(X,P), related(P,Y), X \= Y.

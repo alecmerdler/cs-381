@@ -106,7 +106,8 @@ bool(f).
 cmd(C,S1,S2) :- number(C), S2 = [C|S1].
 cmd(C,S1,S2) :- string(C), S2 = [C|S1].
 cmd(C,S1,S2) :- bool(C), S2 = [C|S1].
-cmd(add,[First,Second|S1],S2) :- S2 = [Result|S1], Result is First+Second.
+cmd(add,[First,Second|S1],S2) :- S2 = [Result|S1], Result is First + Second.
+cmd(lte,[First,Second|S1],S2) :- S2 = [t|S1], First =< Second.
 
 
 % 2. Define the predicate `prog/3`, which describes the effect of executing a

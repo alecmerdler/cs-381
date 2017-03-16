@@ -82,11 +82,15 @@ uncle(A,C) :- siblingInLaw(A,B), parent(B,C), male(A).
 cousin(X,Y) :- child(X,P), sibling(P,S), parent(S,Y).
 
 % 9. Define the predicate `ancestor/2`.
-ancestor(X,Y) :- parent(X,Y). %base case
+ancestor(X,Y) :- parent(X,Y).
 ancestor(X,Y) :- parent(X,C), ancestor(C,Y).
 
 % Extra credit: Define the predicate `related/2`.
-% TODO
+% FIXME: Does not stop execution
+related(X,Y) :- child(X,Y).
+related(X,Y) :- parent(X,Y).
+related(X,Y) :- child(X,P), related(P,Y), X \= Y.
+related(X,Y) :- parent(X,C), related(C,Y), X \= Y.
 
 
 

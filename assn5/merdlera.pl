@@ -1,3 +1,9 @@
+%
+% CS381
+% Assignment #5
+% Alec Merdler (merdlera)
+%
+
 % Here are a bunch of facts describing the Simpson's family tree.
 % Don't change them!
 

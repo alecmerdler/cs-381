@@ -99,6 +99,8 @@ related(X,Y) :- descendent(X,Y).
 related(X,Y) :- ancestor(X,Y).
 related(X,Y) :- descendent(X,A), sibling(A,Y), X \= Y.
 related(X,Y) :- ancestor(X,D), sibling(D,Y), X \= Y.
+related(X,Y) :- ancestor(X,D), related(D,Y), X \= Y.
+% related(X,Y) :- descendent(X,A), related(A,Y), X \= Y.
 
 
 

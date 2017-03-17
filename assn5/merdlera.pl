@@ -91,7 +91,6 @@ ancestor(X,Y) :- parent(X,C), ancestor(C,Y).
 descendent(X,Y) :- parent(Y,X).
 descendent(X,Y) :- parent(P,X), descendent(P,Y).
 
-% FIXME: Not recursive
 related(X,Y) :- child(X,Y).
 related(X,Y) :- parent(X,Y).
 related(X,Y) :- sibling(X,Y).
@@ -100,7 +99,6 @@ related(X,Y) :- ancestor(X,Y).
 related(X,Y) :- descendent(X,A), sibling(A,Y), X \= Y.
 related(X,Y) :- ancestor(X,D), sibling(D,Y), X \= Y.
 related(X,Y) :- ancestor(X,D), related(D,Y), X \= Y.
-% related(X,Y) :- descendent(X,A), related(A,Y), X \= Y.
 
 
 
